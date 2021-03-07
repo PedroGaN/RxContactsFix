@@ -15,6 +15,11 @@ class NetworkManager: NetworkManagerProtocol {
     let defaults = UserDefaults.standard
     var currentUser : Any?
     
+    func checkUser(){
+        guard let savedUser = defaults.object(forKey: "SavedUser") as? User else {return}
+        self.currentUser = savedUser
+    }
+    
     static var shared: NetworkManager = NetworkManager()
     
     func request(path: String, method: HTTPMethod, parameters: [String: Any]? = [:], headers: HTTPHeaders? = [],petition: String, completion: @escaping (Any) -> Void) {
@@ -26,7 +31,6 @@ class NetworkManager: NetworkManagerProtocol {
             AF.request(url, method: method, parameters: parameters, headers: headers)
                 .validate()
                 .responseDecodable(of: LogRegUpResponse.self) { (response) in
-                    print(response)
                     guard let completionValue = response.value else { return }
                     if completionValue[0].status == "OK" { completion(completionValue[0].user) }
                     completion(completionValue[0].status)
