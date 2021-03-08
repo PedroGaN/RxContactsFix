@@ -39,6 +39,8 @@ class IntroPresenter: IntroPresenterProtocol {
         from.performSegue(withIdentifier: identifier, sender: Any?.self)
     }
     
+    
+    //Here we create a false user based on our struct
     func saveUser(email:String, password: String){
         let image : UIImage = UIImage(named: "default_user")!
         let imageData : Data = image.pngData()!
@@ -56,6 +58,15 @@ class IntroPresenter: IntroPresenterProtocol {
             print(decodedUser)
         }
     }
+    
+    //Checks if there is a saved user and if it is it jumps into the main app
+    func checkUser() -> Bool{
+        if NetworkManager.shared.defaults.object(forKey: "saved_user") != nil {
+            return true
+        } else {
+            return false
+        }
+    }
 
 }
 
@@ -65,4 +76,5 @@ protocol IntroPresenterProtocol{
     func doRememberPassword()
     func goTo(identifier: String, from: UIViewController)
     func saveUser(email: String, password: String)
+    func checkUser() -> Bool
 }

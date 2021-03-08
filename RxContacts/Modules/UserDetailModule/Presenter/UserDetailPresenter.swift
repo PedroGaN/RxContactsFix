@@ -39,8 +39,19 @@ class UserDetailPresenter: UserDetailPresenterProtocol {
             let encodedUser = try? JSONEncoder().encode(self.currentUser)
             
             NetworkManager.shared.defaults.setValue(encodedUser, forKey: "saved_user")
+        }else{
+            self.userDetailView?.userPasswordTextField.text = "Wrong Password"
         }
         
+    }
+    
+    func deleteUser(password: String) {
+        if password == self.currentUser?.apiToken {
+            NetworkManager.shared.defaults.removeObject(forKey: "saved_user")
+            exit(0)
+        }else{
+            self.userDetailView?.userPasswordTextField.text = "Wrong Password"
+        }
     }
     
 }
@@ -49,4 +60,5 @@ protocol UserDetailPresenterProtocol{
     func getUser()
     func setDetails()
     func updatePassword(newPass: String, password: String)
+    func deleteUser(password: String)
 }

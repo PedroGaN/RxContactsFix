@@ -21,6 +21,8 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         
         self.loginPresenterProtocol = IntroPresenter(loginView: self)
         
+
+        
         //-----------DISMISS KEYBOARD------------
         //We create a UITapGestureRecognizer calling the action  UIView.endEditing to dismiss the keyboard
         let tap = UITapGestureRecognizer(target: self.view, action: #selector(UIView.endEditing))
@@ -29,6 +31,13 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         //-----------DISMISS KEYBOARD------------
         
     }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        if self.loginPresenterProtocol?.checkUser() ?? false {
+            self.loginPresenterProtocol?.goTo(identifier: Constants.Segues.LoginToContacts, from: self)
+        }
+    }
+
     //---------------FIRST RESPONDER---------------
     //This two actions controls the flux of FirstResponders by checking if the sender is the first responder or not
     //and assigning the value that corresponds at that moment also returns the background color to default color
@@ -40,7 +49,6 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         if self.PasswordTextField.isFirstResponder {self.EmailTextField.backgroundColor = Constants.Colors.defaultColor}
         else {self.PasswordTextField.becomeFirstResponder(); self.PasswordTextField.backgroundColor = Constants.Colors.defaultColor}
     }
-    
     //---------------FIRST RESPONDER---------------
     
     //---------------VIEW CONNECTIONS--------------
