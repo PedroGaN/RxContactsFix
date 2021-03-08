@@ -15,8 +15,8 @@ struct User: Codable {
     let name, lastName, email: String
     let phoneNumber: Int
     let userImage: String
-    let contactsInfo: [ContactsInfo]
-    let apiToken, createdAt, updatedAt: String
+    var contactsInfo: [ContactsInfo]
+    var apiToken, createdAt, updatedAt: String
 
     enum CodingKeys: String, CodingKey {
         case id, name

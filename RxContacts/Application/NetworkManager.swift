@@ -142,6 +142,10 @@ class NetworkManager: NetworkManagerProtocol {
         return check
     }
     
+    func rememberPassword() {
+        //TO DO
+    }
+    
     func fetchUsers() -> Users {
         
         var user : Users?
@@ -163,4 +167,9 @@ protocol NetworkManagerProtocol {
     func delete(parameters: [String:Any], headers: HTTPHeaders) -> Bool
     func contacts(parameters: [String:Any], headers: HTTPHeaders) -> Bool
     func fetchUsers() -> Users
+    
+    //TO DO
+    func rememberPassword()
+    
+    func checkUser()
 }
