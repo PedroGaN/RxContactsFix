@@ -22,63 +22,58 @@ class NetworkManager: NetworkManagerProtocol {
     
     static var shared: NetworkManager = NetworkManager()
     
-    func request(path: String, method: HTTPMethod, parameters: [String: Any]? = [:], headers: HTTPHeaders? = [],petition: String, completion: @escaping (Any) -> Void) {
+    func request(path: String, method: HTTPMethod, parameters: [String: Any]? = [:], headers: HTTPHeaders? = [],petition: String, completion: @escaping (String) -> Void) {
         
         let url : String = Constants.baseUrl + path
         
         switch petition {
         case "login","register","update":
-            AF.request(url, method: method, parameters: parameters, headers: headers)
+            AF.request(url, method: method, parameters: parameters, encoding: JSONEncoding.prettyPrinted, headers: headers)
                 .validate()
                 .responseDecodable(of: LogRegUpResponse.self) { (response) in
                     guard let completionValue = response.value else { return }
-                    if completionValue[0].status == "OK" { completion(completionValue[0].user) }
+                    if completionValue[0].status == "OK" { self.currentUser = completionValue[0].user }
                     completion(completionValue[0].status)
                 }
         case "delete","logout":
-            AF.request(url, method: method, parameters: parameters, headers: headers)
+            AF.request(url, method: method, parameters: parameters,encoding: JSONEncoding.prettyPrinted, headers: headers)
                 .validate()
                 .responseDecodable(of: String.self) { (response) in
                     guard let completionValue = response.value else { return }
                     completion(completionValue)
                 }
         case "contacts":
-            AF.request(url, method: method, parameters: parameters, headers: headers)
+            AF.request(url, method: method, parameters: parameters, encoding: JSONEncoding.prettyPrinted, headers: headers)
                 .validate()
                 .responseDecodable(of: User.self) { (response) in
                     guard let completionValue = response.value else { return }
-                    if completionValue.id != 0 {completion(completionValue)}
+                    //if completionValue.id != 0 {completion(completionValue)}
                     completion("ERROR")
                 }
         case "users":
-            AF.request(url, method: method, parameters: parameters, headers: headers)
+            AF.request(url, method: method, parameters: parameters, encoding: JSONEncoding.prettyPrinted, headers: headers)
                 .validate()
                 .responseDecodable(of: Users.self) { (response) in
                     guard let completionValue = response.value else { return }
-                    if completionValue.count != 0 { completion(completionValue) }
+                    //if completionValue.count != 0 { completion(completionValue) }
                     completion("ERROR")
                 }
         default:
-            AF.request(url, method: method, parameters: parameters, headers: headers)
+            AF.request(url, method: method, parameters: parameters, encoding: JSONEncoding.prettyPrinted, headers: headers)
                 .validate()
                 .responseDecodable(of: String.self) { (response) in
-                    guard let completionValue = response.value else { return }
-                    completion(completionValue)
+                    //guard let completionValue = response.value else { return }
+                    //completion(completionValue)
                 }
         }
     }
     
-    func login(parameters: [String:Any]) -> Bool {
-        
-        var check : Bool = false
+    func login(parameters: [String:Any], completion: @escaping (String) -> Void) {
         
         request(path: "login", method: .post, parameters: parameters, petition: "login", completion: { LoginResponse in
-            guard let user = LoginResponse as? User else {return}
-            self.currentUser = user
-            check = true
+            print(self.currentUser!)
+            completion(LoginResponse)
         })
-        
-        return check
     }
     
     func register(parameters: [String:Any]) -> Bool {
@@ -159,8 +154,8 @@ class NetworkManager: NetworkManagerProtocol {
 }
 
 protocol NetworkManagerProtocol {
-    func request(path: String, method: HTTPMethod, parameters: [String: Any]?, headers: HTTPHeaders?,petition: String, completion: @escaping (Any) -> Void)
-    func login(parameters: [String:Any]) -> Bool
+    func request(path: String, method: HTTPMethod, parameters: [String: Any]?, headers: HTTPHeaders?,petition: String, completion: @escaping (String) -> Void)
+    func login(parameters: [String:Any], completion: @escaping (String) -> Void)
     func register(parameters: [String:Any]) -> Bool
     func update(parameters: [String:Any], headers: HTTPHeaders) -> Bool
     func logout(parameters: [String:Any], headers: HTTPHeaders) -> Bool

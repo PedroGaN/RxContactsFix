@@ -21,8 +21,6 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         
         self.loginPresenterProtocol = IntroPresenter(loginView: self)
         
-
-        
         //-----------DISMISS KEYBOARD------------
         //We create a UITapGestureRecognizer calling the action  UIView.endEditing to dismiss the keyboard
         let tap = UITapGestureRecognizer(target: self.view, action: #selector(UIView.endEditing))
@@ -33,48 +31,64 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
     }
     
     override func viewDidAppear(_ animated: Bool) {
-        if self.loginPresenterProtocol?.checkUser() ?? false {
+        /*if self.loginPresenterProtocol?.checkUser() ?? false {
             self.loginPresenterProtocol?.goTo(identifier: Constants.Segues.LoginToContacts, from: self)
-        }
+        }*/
+        
     }
-
-    //---------------FIRST RESPONDER---------------
-    //This two actions controls the flux of FirstResponders by checking if the sender is the first responder or not
-    //and assigning the value that corresponds at that moment also returns the background color to default color
-    @IBAction func EmailTextFieldUpdate(_ sender: Any) {
-        if self.EmailTextField.isFirstResponder {self.EmailTextField.backgroundColor = Constants.Colors.defaultColor}
-        else {self.EmailTextField.becomeFirstResponder(); self.EmailTextField.backgroundColor = Constants.Colors.defaultColor}
-    }
-    @IBAction func PasswordTextFieldUpdate(_ sender: Any) {
-        if self.PasswordTextField.isFirstResponder {self.EmailTextField.backgroundColor = Constants.Colors.defaultColor}
-        else {self.PasswordTextField.becomeFirstResponder(); self.PasswordTextField.backgroundColor = Constants.Colors.defaultColor}
-    }
-    //---------------FIRST RESPONDER---------------
     
     //---------------VIEW CONNECTIONS--------------
     //This actions controls the flux between the intro views
-    @IBAction func SignUpButton(_ sender: Any) {
-        self.loginPresenterProtocol?.goTo(identifier: Constants.Segues.LoginToReg, from: self)
+    
+    @IBAction func SignInBTNAction(_ sender: Any) {
+        var check = false
+        var alertString = "Missing "
+        if self.EmailTextField.text!.isEmpty {alertString += "| Email "} else {check = true}
+        if self.PasswordTextField.text!.isEmpty {alertString += "| Password"; check = false}
+        if check {
+            
+            self.loginPresenterProtocol?.doLogin(email: self.EmailTextField.text!, password: PasswordTextField.text!, completion: { status in
+                
+                if status == "OK" {
+                    self.loginPresenterProtocol?.goTo(identifier: Constants.Segues.LoginToContacts, from: self)
+                }else{
+                    AlertHelper.shared.getAlert(alertText: "Something went wrong", completion: { alert in
+                        self.present(alert, animated: true, completion: nil)
+                    })
+                }
+                
+            })
+        }
+        else {AlertHelper.shared.getAlert(alertText: alertString, completion: { alert in
+            self.present(alert, animated: true, completion: nil)
+        })}
     }
     
+    @IBAction func ForgotPasswordBTNAction(_ sender: Any) {
+        AlertHelper.shared.getRecoverPasswordAlert(completion: { alert in
+            self.present(alert, animated: true, completion: nil)
+        })
+    }
+    
+    /*
     @IBAction func ForgotPasswordButton(_ sender: Any) {
         self.loginPresenterProtocol?.goTo(identifier: Constants.Segues.LoginToForgot, from: self)
     }
     
     //In this functions the values on the textFields are being checked ifEmpty to validate if we can proceed with the segue
     @IBAction func LoginButton(_ sender: Any) {
-        var check = false
-        if self.EmailTextField.text!.isEmpty {self.EmailTextField.backgroundColor = Constants.Colors.errorColor} else {check = true}
-        if self.PasswordTextField.text!.isEmpty {self.PasswordTextField.backgroundColor = Constants.Colors.errorColor; check = false}
+        /*var check = false
+        if self.LoginEmailTextField.text!.isEmpty {self.LoginEmailTextField.backgroundColor = Constants.Colors.errorColor} else {check = true}
+        if self.LoginPasswordTextField.text!.isEmpty {self.LoginPasswordTextField.backgroundColor = Constants.Colors.errorColor; check = false}
         //if check {self.loginPresenterProtocol?.doLogin()}
         if check {
-            self.loginPresenterProtocol?.saveUser(email: self.EmailTextField.text!, password: self.PasswordTextField.text!)
+            self.loginPresenterProtocol?.saveUser(email: self.LoginEmailTextField.text!, password: self.LoginPasswordTextField.text!)
             self.loginPresenterProtocol?.goTo(identifier: Constants.Segues.LoginToContacts, from: self)
             
-        }
+        }*/
         
     }
-    //---------------VIEW CONNECTIONS--------------
+    //---------------VIEW CONNECTIONS--------------*/
     
     
 }

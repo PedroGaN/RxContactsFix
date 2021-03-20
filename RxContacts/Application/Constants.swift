@@ -13,13 +13,9 @@ struct Constants {
     static let baseUrl = "https://contacts-bd.herokuapp.com/api/users/"
     
     struct Segues {
-        static let LoginToForgot = "LoginToForgot"
-        static let LoginToReg = "LoginToReg"
+
         static let LoginToContacts = "LoginToContacts"
-        static let RegToLogin = "RegToLogin"
-        static let RegToContacts = "RegToContacts"
-        static let ForgotToLogin = "ForgotToLogin"
-        static let ForgotToReg = "ForgotToReg"
+        static let RegToContacts = "RegisterToContacts"
 
     }
     

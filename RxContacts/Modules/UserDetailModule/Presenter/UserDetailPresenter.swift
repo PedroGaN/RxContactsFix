@@ -18,10 +18,10 @@ class UserDetailPresenter: UserDetailPresenterProtocol {
     }
     
     func getUser() {
-        let savedUser : Data = NetworkManager.shared.defaults.object(forKey: "saved_user") as! Data
+        /*let savedUser : Data = NetworkManager.shared.defaults.object(forKey: "saved_user") as! Data
         if let decodedUser = try? JSONDecoder().decode(User.self, from: savedUser){
             self.currentUser = decodedUser
-        }
+        }*/
     }
     
     func setDetails() {

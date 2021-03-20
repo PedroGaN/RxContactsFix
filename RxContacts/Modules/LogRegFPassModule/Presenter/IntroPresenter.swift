@@ -11,19 +11,19 @@ import Alamofire
 
 class IntroPresenter: IntroPresenterProtocol {
     
-    var loginView : LoginViewController?
-    var registerView : RegisterViewController?
-    var forgotPasswordView : ForgotPasswordViewController?
+    var VController : Any?
     
-    init (loginView: LoginViewController? = nil, registerView: RegisterViewController? = nil, forgotPasswordView: ForgotPasswordViewController? = nil){
+    var view : UIView?
+    
+    init (loginView: LoginViewController? = nil, registerView: RegisterViewController? = nil){
         
-        if(loginView != nil){self.loginView = loginView}
-        if(registerView != nil){self.registerView = registerView}
-        if(forgotPasswordView != nil){self.forgotPasswordView = forgotPasswordView}
+        if let VC : LoginViewController = loginView { self.view = VC.view; self.VController = VC }
+        if let VC = registerView { self.view = VC.view; self.VController = VC }
         
     }
     
     func doRegister() {
+        print("entro")
         //NetworkManager.shared.register(parameters: <#T##[String : Any]#>)
     }
     
@@ -31,14 +31,22 @@ class IntroPresenter: IntroPresenterProtocol {
         //NetworkManager.shared.rememberPassword()
     }
     
-    func doLogin() {
-        //NetworkManager.shared.login(parameters: <#T##[String : Any]#>)
+    func doLogin(email: String, password: String, completion: @escaping (String) -> Void) {
+        
+        let parameters = [
+            
+            "email" : email,
+            "password" : password
+        ]
+        
+        NetworkManager.shared.login(parameters: parameters, completion: { status in
+            completion(status)
+        })
     }
     
     func goTo(identifier: String, from: UIViewController) {
         from.performSegue(withIdentifier: identifier, sender: Any?.self)
     }
-    
     
     //Here we create a false user based on our struct
     func saveUser(email:String, password: String){
@@ -71,8 +79,7 @@ class IntroPresenter: IntroPresenterProtocol {
 }
 
 protocol IntroPresenterProtocol{
-    func doLogin()
-    func doRegister()
+    func doLogin(email: String, password: String, completion: @escaping (String) -> Void)
     func doRememberPassword()
     func goTo(identifier: String, from: UIViewController)
     func saveUser(email: String, password: String)
