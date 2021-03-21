@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import UIKit
 
 class ContactsPresenter: ContactsPresenterProtocol {
     
@@ -15,14 +16,11 @@ class ContactsPresenter: ContactsPresenterProtocol {
         self.contactsView = contactsView
     }
     
-    func getUser() {
-        /*let savedUser : Data = NetworkManager.shared.defaults.object(forKey: "saved_user") as! Data
-        if let decodedUser = try? JSONDecoder().decode(User.self, from: savedUser){
-            self.contactsView?.currentUser = decodedUser
-        }*/
+    func goTo(identifier: String, from: UIViewController) {
+        from.performSegue(withIdentifier: identifier, sender: Any?.self)
     }
 }
 
 protocol ContactsPresenterProtocol{
-    func getUser()
+    func goTo(identifier: String, from: UIViewController)
 }

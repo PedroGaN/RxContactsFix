@@ -9,18 +9,11 @@ import Foundation
 import UIKit
 
 class ContactTableViewCell: UITableViewCell {
-    
-    var deleteButtonTapCallback: () -> ()  = { }
-    
 
     @IBOutlet weak var contactName: UILabel!
     @IBOutlet weak var contactLastName: UILabel!
     @IBOutlet weak var contactEmail: UILabel!
     @IBOutlet weak var contactPhone: UILabel!
-    
-    @IBAction func deleteContactButtonAction(_ sender: Any) {
-        deleteButtonTapCallback()
-    }
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)

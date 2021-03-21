@@ -12,7 +12,11 @@ class RegisterViewController: UIViewController, UITextFieldDelegate {
     
     var registerPresenterProtocol : IntroPresenterProtocol?
     
+    let spinner = UIActivityIndicatorView(style: .large)
     
+    @IBOutlet weak var NameTextField: UITextField!
+    @IBOutlet weak var LastNameTextField: UITextField!
+    @IBOutlet weak var PhoneNumberTextField: UITextField!
     @IBOutlet weak var EmailTextField: UITextField!
     @IBOutlet weak var PasswordTextField: UITextField!
     @IBOutlet weak var ConfirmPasswordTextField: UITextField!
@@ -32,41 +36,68 @@ class RegisterViewController: UIViewController, UITextFieldDelegate {
         
     }
     
-    
     @IBAction func SignUpBTNAction(_ sender: Any) {
+        print("entro")
+        self.tryRegister(name: self.NameTextField.text!,
+                         lastName: self.LastNameTextField.text!,
+                         phone: self.PhoneNumberTextField.text!,
+                         email: self.EmailTextField.text!,
+                         password: self.PasswordTextField.text!,
+                         checkPassword: self.ConfirmPasswordTextField.text!)
+    }
+    
+    func tryRegister(name: String, lastName: String, phone: String, email: String, password: String, checkPassword: String){
+        print("entro")
         var check = false
         var alertString = "Missing "
-        if self.EmailTextField.text!.isEmpty {alertString += "| Email "} else {check = true}
-        if self.PasswordTextField.text!.isEmpty {alertString += "| Password "; check = false}
-        if self.ConfirmPasswordTextField.text!.isEmpty {alertString += "| ConfirmPassword"; check = false}
+        if name.isEmpty {alertString += "| Name "} else {check = true}
+        if lastName.isEmpty {alertString += "| LastName "; check = false}
+        if phone.isEmpty {alertString += "| PhoneNumber "; check = false}
+        if email.isEmpty {alertString += "| Email "; check = false}
+        if password.isEmpty {alertString += "| Password "; check = false}
+        if checkPassword.isEmpty {alertString += "| ConfirmPassword "; check = false}
         if check {
-            if self.PasswordTextField.text! != self.ConfirmPasswordTextField.text! {
+            if password != checkPassword {
                 AlertHelper.shared.getAlert(alertText: "Passwords have to match", completion: { alert in
                     self.present(alert, animated: true, completion: nil)
                 })
-            } else {self.registerPresenterProtocol?.goTo(identifier: Constants.Segues.RegToContacts, from: self)}
-            
-            
-        }else {AlertHelper.shared.getAlert(alertText: alertString, completion: { alert in
-            self.present(alert, animated: true, completion: nil)
-        })}
+            } else {
+
+                self.startPetition()
+                self.registerPresenterProtocol?.doRegister(name: name, lastName: lastName, phone: phone, email: email, password: password, completion: { status in
+                    if status == "OK" {
+   
+                        self.endPetition()
+                        self.registerPresenterProtocol?.goTo(identifier: Constants.Segues.RegToContacts, from: self)
+                    }else{
+
+                        self.endPetition()
+                        AlertHelper.shared.getAlert(alertText: "Something went wrong", completion: { alert in
+                            self.present(alert, animated: true, completion: nil)
+                        })
+                    }
+                })
+            }
+        } else {
+            AlertHelper.shared.getAlert(alertText: alertString, completion: { alert in
+                self.present(alert, animated: true, completion: nil)
+            })
+        }
     }
     
-    
-    
-    
-    //---------------VIEW CONNECTIONS--------------
-    //This actions controls the flux between the intro views
-    /*@IBAction func SignUpButton(_ sender: Any) {
-        var check = false
-        if self.EmailTextField.text!.isEmpty {self.EmailTextField.backgroundColor = Constants.Colors.errorColor} else {check = true}
-        if self.PasswordTextField.text!.isEmpty {self.PasswordTextField.backgroundColor = Constants.Colors.errorColor; check = false}
-        if self.PasswordTextField.text! != self.ConfirmPasswordTextField.text! {self.PasswordTextField.backgroundColor = Constants.Colors.errorColor; check = false}
-        //if check {self.registerPresenterProtocol?.doRegister()}
-        if check {self.registerPresenterProtocol?.goTo(identifier: Constants.Segues.RegToContacts, from: self)}
+    func startPetition(){
+        self.view.addSubview(self.spinner)
+        self.spinner.color = UIColor.blue
+        self.spinner.center = CGPoint(x: view.frame.size.width*0.5, y: view.frame.size.height*0.5)
+        self.view.isUserInteractionEnabled = false
+        self.view.alpha = 0.5
+        self.spinner.startAnimating()
     }
-    @IBAction func LoginButton(_ sender: Any) {
-        self.registerPresenterProtocol?.goTo(identifier: Constants.Segues.RegToLogin, from: self)
-    }*/
-    //---------------VIEW CONNECTIONS--------------
+    
+    func endPetition(){
+        self.spinner.stopAnimating()
+        self.spinner.removeFromSuperview()
+        self.view.isUserInteractionEnabled = true
+        self.view.alpha = 1
+    }
 }

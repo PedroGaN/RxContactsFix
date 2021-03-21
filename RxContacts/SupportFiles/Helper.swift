@@ -33,6 +33,7 @@ class AlertHelper: AlertHelperProtocol {
         let recoverPasswordAction = UIAlertAction(title: "Recover Password", style: .default) { action in
             if let txtField = alertController.textFields?.first, let email = txtField.text {
                 
+                //TO DO
                 print("new password")
                 print(email)
                 
@@ -60,4 +61,38 @@ class AlertHelper: AlertHelperProtocol {
 protocol AlertHelperProtocol {
     func getAlert(alertText: String, completion: @escaping (UIAlertController) -> Void)
     func getRecoverPasswordAlert(completion: @escaping (UIAlertController) -> Void)
+}
+
+class UserHelper: UserHelperProtocol {
+    
+    let defaults = UserDefaults.standard
+    
+    static var shared: UserHelper = UserHelper()
+    
+    func saveUser(){
+        
+        //SAVE IMAGE
+        /*let image : UIImage = UIImage(named: "default_user")!
+        let imageData : Data = image.pngData()!
+        let base64Image = imageData.base64EncodedString(options: .lineLength64Characters)*/
+        
+        let encodedUser = try? JSONEncoder().encode(Constants.currentUser)
+        self.defaults.setValue(encodedUser, forKey: "saved_user")
+    }
+    
+    func checkUser() -> Bool{
+        guard let savedUser : User = self.defaults.object(forKey: "saved_user") as? User else {return false}
+        if savedUser.id != 0 { Constants.currentUser = savedUser; return true}
+        return false
+    }
+    
+    func deleteStoredUser() {
+        self.defaults.removeObject(forKey: "saved_user")
+    }
+}
+
+protocol UserHelperProtocol{
+    func saveUser()
+    func checkUser() -> Bool
+    func deleteStoredUser()
 }
