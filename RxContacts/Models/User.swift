@@ -35,13 +35,15 @@ typealias Contacts = [ContactsInfo]
 
 // MARK: - ContactsInfo
 struct ContactsInfo: Codable {
-    let name, lastName, email: String
-    let phoneNumber: Int
+    var name, lastName, email : String
+    //let contactImage: String
+    var phoneNumber: Int
 
     enum CodingKeys: String, CodingKey {
         case name
         case lastName = "last_name"
         case email
         case phoneNumber = "phone_number"
+        //case contactImage = "contact_image"
     }
 }

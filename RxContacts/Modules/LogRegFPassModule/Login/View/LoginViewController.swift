@@ -49,6 +49,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
                 if status == "OK" {
                     
                     self.endPetition()
+                    UserHelper.shared.saveUser()
                     self.loginPresenterProtocol?.goTo(identifier: Constants.Segues.LoginToContacts, from: self)
                 }else{
 

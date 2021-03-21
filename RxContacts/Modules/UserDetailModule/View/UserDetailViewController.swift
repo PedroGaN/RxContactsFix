@@ -19,12 +19,12 @@ class UserDetailViewController: UIViewController {
     @IBOutlet weak var UserEmailLabel: UILabel!
     @IBOutlet weak var UserPhoneLabel: UILabel!
     
+    let spinner = UIActivityIndicatorView(style: .large)
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
         self.userDetailPresenterProtocol = UserDetailPresenter(userDetailView: self)
-        
-        self.userDetailPresenterProtocol?.setDetails()
         
         //-----------DISMISS KEYBOARD------------
         //We create a UITapGestureRecognizer calling the action  UIView.endEditing to dismiss the keyboard
@@ -33,12 +33,46 @@ class UserDetailViewController: UIViewController {
         view.addGestureRecognizer(tap)
         //-----------DISMISS KEYBOARD------------
         
+        
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        self.userDetailPresenterProtocol?.setDetails()
     }
     
     @IBAction func DeleteUserBTNAction(_ sender: Any) {
+
+        AlertHelper.shared.getDeleteUserAlert(view: self,completion: {alert in
+            self.present(alert, animated: true, completion: nil)
+        })
     }
     
+    
     @IBAction func LogoutUserBTNAction(_ sender: Any) {
+        self.startPetition()
+        self.userDetailPresenterProtocol?.logoutUser(completion: { status in
+            self.endPetition()
+            if status == "OK" {exit(0)}
+            else { AlertHelper.shared.getAlert(alertText: "Something Went Wrong", completion: { alert in
+                self.present(alert, animated: true, completion: nil)
+            })}
+        })
+    }
+    
+    func startPetition(){
+        self.view.addSubview(self.spinner)
+        self.spinner.color = UIColor.blue
+        self.spinner.center = CGPoint(x: view.frame.size.width*0.5, y: view.frame.size.height*0.5)
+        self.view.isUserInteractionEnabled = false
+        self.view.alpha = 0.5
+        self.spinner.startAnimating()
+    }
+    
+    func endPetition(){
+        self.spinner.stopAnimating()
+        self.spinner.removeFromSuperview()
+        self.view.isUserInteractionEnabled = true
+        self.view.alpha = 1
     }
     
 }

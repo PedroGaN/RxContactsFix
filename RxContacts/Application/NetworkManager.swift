@@ -24,40 +24,24 @@ class NetworkManager: NetworkManagerProtocol {
                 .validate()
                 .responseDecodable(of: LogRegUpResponse.self)
                 { (response) in
+                    print(response)
                     guard let completionValue = response.value else { completion("KO"); return }
-                    print(Constants.currentUser)
+    
                     if completionValue[0].status == "OK" { Constants.currentUser = completionValue[0].user }
                     print(Constants.currentUser)
                     completion(completionValue[0].status)
                 }
-        case "delete","logout":
+        case "delete","logout","contacts":
             AF.request(url, method: method, parameters: parameters,encoding: JSONEncoding.prettyPrinted, headers: headers)
                 .validate()
                 .responseString() { (response) in
-                    guard let completionValue = response.value else { return }
+                    print(response)
+                    guard let completionValue = response.value else { completion("KO"); return }
                     completion(completionValue)
                 }
-        case "contacts":
-            AF.request(url, method: method, parameters: parameters, encoding: JSONEncoding.prettyPrinted, headers: headers)
-                .validate()
-                .responseDecodable(of: User.self) { (response) in
-                    guard let completionValue = response.value else { return }
-                    //CHECK RESPONSE IN SERVER
-                }
-        case "users":
-            AF.request(url, method: method, parameters: parameters, encoding: JSONEncoding.prettyPrinted, headers: headers)
-                .validate()
-                .responseDecodable(of: Users.self) { (response) in
-                    guard let completionValue = response.value else { return }
-                    //CHECK RESPONSE IN SERVER
-                }
+
         default:
-            AF.request(url, method: method, parameters: parameters, encoding: JSONEncoding.prettyPrinted, headers: headers)
-                .validate()
-                .responseDecodable(of: String.self) { (response) in
-                    //guard let completionValue = response.value else { return }
-                    //completion(completionValue)
-                }
+            completion("KO")
         }
     }
     
@@ -89,7 +73,10 @@ class NetworkManager: NetworkManagerProtocol {
     func logout(parameters: [String:Any], headers: HTTPHeaders, completion: @escaping (String) -> Void) {
         
         request(path: "logout", method: .post, parameters: parameters, headers: headers,petition: "logout", completion: { LogoutResponse in
-            if "OK" == LogoutResponse {/*TO DO;*/  completion(LogoutResponse)} else {completion(LogoutResponse)}
+            if "OK" == LogoutResponse {
+                UserHelper.shared.deleteStoredUser()
+                completion(LogoutResponse)
+            } else {completion(LogoutResponse)}
         })
 
     }
@@ -98,7 +85,10 @@ class NetworkManager: NetworkManagerProtocol {
     func delete(parameters: [String:Any], headers: HTTPHeaders, completion: @escaping (String) -> Void) {
         
         request(path: "delete", method: .post, parameters: parameters, headers: headers,petition: "delete", completion: { DeleteResponse in
-            if "OK" == DeleteResponse {/*TO DO;*/ completion(DeleteResponse)} else {completion(DeleteResponse)}
+            if "OK" == DeleteResponse {
+                UserHelper.shared.deleteStoredUser()
+                completion(DeleteResponse)
+            } else {completion(DeleteResponse)}
         })
     }
     
@@ -114,16 +104,6 @@ class NetworkManager: NetworkManagerProtocol {
     func rememberPassword() {
         //TO DO
     }
-    
-    /*func fetchUsers() -> Users {
-        
-        var user : Users?
-        
-        request(path: "fetch", method: .get, petition: "users", completion: { UsersResponse in
-        })
-        
-        return user!
-    }*/
 }
 
 protocol NetworkManagerProtocol {

@@ -7,6 +7,7 @@
 
 import Foundation
 import UIKit
+import Alamofire
 
 class AlertHelper: AlertHelperProtocol {
     
@@ -56,6 +57,104 @@ class AlertHelper: AlertHelperProtocol {
         
     }
     
+    func getDeleteUserAlert(view: UserDetailViewController, completion: @escaping (UIAlertController) -> Void) {
+        
+        let alertController = UIAlertController(title: "Delete User", message: "Type your Account Password", preferredStyle: .alert)
+        
+        let deleteUserAction = UIAlertAction(title: "Delete User", style: .default) { action in
+            if let txtField = alertController.textFields?.first, let password = txtField.text {
+                
+                txtField.isSecureTextEntry = true
+                txtField.autocorrectionType = .no
+                //TO DO
+
+                let headers : HTTPHeaders = [ "Authorization" : "Bearer " + Constants.currentUser.apiToken]
+                let parameters : [String : Any] = [ "id" : Constants.currentUser.id, "password" : password ]
+                
+                view.startPetition()
+                
+                NetworkManager.shared.delete(parameters: parameters, headers: headers, completion: { status in
+                    view.endPetition()
+                    if status == "OK" {
+                        UserHelper.shared.deleteStoredUser()
+                        exit(0)
+                    } else {
+                        print("Something went wrong")
+                    }
+                })
+            }
+        }
+        
+        let cancelAction = UIAlertAction(title: "Cancel", style: .destructive) { action in
+            alertController.dismiss(animated: true, completion: nil)
+        }
+        
+        alertController.addTextField { (textField) in
+            textField.placeholder = "Password"
+            textField.textAlignment = .center
+        }
+        
+        alertController.addAction(deleteUserAction)
+        alertController.addAction(cancelAction)
+        
+        completion(alertController)
+        
+    }
+    
+    func getUpdateUserAlert(view: EditUserViewController, completion: @escaping (UIAlertController) -> Void) {
+        
+        let alertController = UIAlertController(title: "Update User", message: "Type your Account Password", preferredStyle: .alert)
+        
+        let updateUserAction = UIAlertAction(title: "Update User", style: .default) { action in
+            if let txtField = alertController.textFields?.first, let password = txtField.text {
+                
+                txtField.isSecureTextEntry = true
+                txtField.autocorrectionType = .no
+                //TO DO
+
+                let headers : HTTPHeaders = [ "Authorization" : "Bearer " + Constants.currentUser.apiToken]
+                let parameters : [String : Any] =
+                    [
+                        "id" : Constants.currentUser.id,
+                        "password" : password,
+                        "name" : view.UserNameTextField.text ?? "",
+                        "last_name" : view.UserLastNameTextField.text ?? "",
+                        "email" : view.UserEmailTextField.text ?? "",
+                        "contacts_info" : ""
+                    ]
+                
+                view.startPetition()
+                
+                NetworkManager.shared.update(parameters: parameters, headers: headers, completion: { status in
+                    view.endPetition()
+                    if status == "OK" {
+                        UserHelper.shared.saveUser()
+                        view.clearFields()
+                        print(status)
+                    } else {
+                        print("Something went wrong")
+                    }
+                })
+            }
+        }
+        
+        let cancelAction = UIAlertAction(title: "Cancel", style: .destructive) { action in
+            alertController.dismiss(animated: true, completion: nil)
+        }
+        
+        alertController.addTextField { (textField) in
+            textField.placeholder = "Password"
+            textField.textAlignment = .center
+        }
+        
+        alertController.addAction(updateUserAction)
+        alertController.addAction(cancelAction)
+        
+        completion(alertController)
+        
+    }
+    
+    
 }
 
 protocol AlertHelperProtocol {
@@ -81,8 +180,18 @@ class UserHelper: UserHelperProtocol {
     }
     
     func checkUser() -> Bool{
-        guard let savedUser : User = self.defaults.object(forKey: "saved_user") as? User else {return false}
-        if savedUser.id != 0 { Constants.currentUser = savedUser; return true}
+        
+        if let data = UserHelper.shared.defaults.data(forKey: "saved_user") {
+            do {
+                let savedUser = try JSONDecoder().decode(User.self, from: data)
+                if savedUser.id != 0 { Constants.currentUser = savedUser }
+                return true
+            } catch {
+                print("User unable to decode")
+                return false
+            }
+        }
+        
         return false
     }
     

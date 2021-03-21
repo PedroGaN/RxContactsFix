@@ -68,6 +68,7 @@ class RegisterViewController: UIViewController, UITextFieldDelegate {
                     if status == "OK" {
    
                         self.endPetition()
+                        UserHelper.shared.saveUser()
                         self.registerPresenterProtocol?.goTo(identifier: Constants.Segues.RegToContacts, from: self)
                     }else{
 

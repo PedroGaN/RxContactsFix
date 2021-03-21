@@ -20,6 +20,7 @@ struct Constants {
         static let RegToContacts = "RegisterToContacts"
         static let ContactToEdit = "ContactToEdit"
         static let ContactToNew = "ContactToNew"
+        static let DetailToLogin = "DetailToLogin"
 
     }
     

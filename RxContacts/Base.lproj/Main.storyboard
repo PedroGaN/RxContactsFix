@@ -107,6 +107,7 @@
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="fGP-24-hNN"/>
+                    <nil key="simulatedTopBarMetrics"/>
                     <connections>
                         <outlet property="EmailTextField" destination="1wH-Dr-xQN" id="Ggn-gI-0tE"/>
                         <outlet property="PasswordTextField" destination="Dj5-hG-8qf" id="kRT-vG-LcH"/>
@@ -257,7 +258,7 @@
                             <rect key="frame" x="0.0" y="0.0" width="414" height="44"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <subviews>
-                                <searchBar contentMode="redraw" placeholder="Search Contact" translatesAutoresizingMaskIntoConstraints="NO" id="2Wi-ON-Qt9">
+                                <searchBar contentMode="redraw" text="" placeholder="Search Contact" translatesAutoresizingMaskIntoConstraints="NO" id="2Wi-ON-Qt9">
                                     <rect key="frame" x="0.0" y="0.0" width="207" height="44"/>
                                     <color key="barTintColor" red="0.9436400452" green="0.95256410260000002" blue="0.8611050066" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                     <textInputTraits key="textInputTraits" autocorrectionType="no"/>
@@ -439,22 +440,22 @@
                                             <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Contact Name" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="MeE-7g-461">
                                                 <rect key="frame" x="0.0" y="0.0" width="294" height="36.666666666666664"/>
                                                 <fontDescription key="fontDescription" name="PlayfairDisplay-Regular" family="Playfair Display" pointSize="20"/>
-                                                <textInputTraits key="textInputTraits"/>
+                                                <textInputTraits key="textInputTraits" autocorrectionType="no"/>
                                             </textField>
                                             <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Contact Last Name" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="R9q-DW-uIH">
                                                 <rect key="frame" x="0.0" y="56.666666666666686" width="294" height="36.333333333333343"/>
                                                 <fontDescription key="fontDescription" name="PlayfairDisplay-Regular" family="Playfair Display" pointSize="20"/>
-                                                <textInputTraits key="textInputTraits"/>
+                                                <textInputTraits key="textInputTraits" autocorrectionType="no"/>
                                             </textField>
                                             <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Contact Email" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="JJ7-bb-2Vd">
                                                 <rect key="frame" x="0.0" y="113.00000000000001" width="294" height="36.666666666666671"/>
                                                 <fontDescription key="fontDescription" name="PlayfairDisplay-Regular" family="Playfair Display" pointSize="20"/>
-                                                <textInputTraits key="textInputTraits"/>
+                                                <textInputTraits key="textInputTraits" autocorrectionType="no"/>
                                             </textField>
                                             <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Contact Phone Number" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="kxV-3X-gIj">
                                                 <rect key="frame" x="0.0" y="169.66666666666669" width="294" height="36.333333333333343"/>
                                                 <fontDescription key="fontDescription" name="PlayfairDisplay-Regular" family="Playfair Display" pointSize="20"/>
-                                                <textInputTraits key="textInputTraits"/>
+                                                <textInputTraits key="textInputTraits" autocorrectionType="no" keyboardType="numberPad"/>
                                             </textField>
                                         </subviews>
                                     </stackView>
@@ -641,6 +642,7 @@
                         <outlet property="UserLastNameLabel" destination="1oj-xY-JhM" id="KYg-A8-eGf"/>
                         <outlet property="UserNameLabel" destination="nPX-cS-iVe" id="Ucs-Lb-iiS"/>
                         <outlet property="UserPhoneLabel" destination="skx-qF-keX" id="4xV-NF-1fd"/>
+                        <segue destination="9cv-Cw-azR" kind="show" identifier="DetailToLogin" id="GTD-EJ-Rah"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="my7-x3-fQa" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
@@ -673,22 +675,22 @@
                                                     <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="User Name" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="wFm-Vo-qXZ">
                                                         <rect key="frame" x="0.0" y="0.0" width="264" height="40.333333333333336"/>
                                                         <fontDescription key="fontDescription" name="PlayfairDisplay-Regular" family="Playfair Display" pointSize="20"/>
-                                                        <textInputTraits key="textInputTraits"/>
+                                                        <textInputTraits key="textInputTraits" autocorrectionType="no"/>
                                                     </textField>
                                                     <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="User LastName" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Dfs-4w-ey8">
                                                         <rect key="frame" x="0.0" y="55.333333333333314" width="264" height="40.333333333333343"/>
                                                         <fontDescription key="fontDescription" name="PlayfairDisplay-Regular" family="Playfair Display" pointSize="20"/>
-                                                        <textInputTraits key="textInputTraits"/>
+                                                        <textInputTraits key="textInputTraits" autocorrectionType="no"/>
                                                     </textField>
                                                     <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="User PhoneNumber" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="1Tm-1m-d1A">
                                                         <rect key="frame" x="0.0" y="110.66666666666669" width="264" height="40"/>
                                                         <fontDescription key="fontDescription" name="PlayfairDisplay-Regular" family="Playfair Display" pointSize="20"/>
-                                                        <textInputTraits key="textInputTraits"/>
+                                                        <textInputTraits key="textInputTraits" autocorrectionType="no" keyboardType="numberPad"/>
                                                     </textField>
                                                     <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="User Email" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="OwN-dM-Sv5">
                                                         <rect key="frame" x="0.0" y="165.66666666666669" width="264" height="40.333333333333343"/>
                                                         <fontDescription key="fontDescription" name="PlayfairDisplay-Regular" family="Playfair Display" pointSize="20"/>
-                                                        <textInputTraits key="textInputTraits"/>
+                                                        <textInputTraits key="textInputTraits" autocorrectionType="no"/>
                                                     </textField>
                                                 </subviews>
                                             </stackView>
@@ -762,22 +764,22 @@
                                             <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Contact Name" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="SCs-W7-Nzb">
                                                 <rect key="frame" x="0.0" y="0.0" width="294" height="36.666666666666664"/>
                                                 <fontDescription key="fontDescription" name="PlayfairDisplay-Regular" family="Playfair Display" pointSize="20"/>
-                                                <textInputTraits key="textInputTraits"/>
+                                                <textInputTraits key="textInputTraits" autocorrectionType="no"/>
                                             </textField>
                                             <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Contact Last Name" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="aBF-cq-PNv">
                                                 <rect key="frame" x="0.0" y="56.666666666666686" width="294" height="36.333333333333343"/>
                                                 <fontDescription key="fontDescription" name="PlayfairDisplay-Regular" family="Playfair Display" pointSize="20"/>
-                                                <textInputTraits key="textInputTraits"/>
+                                                <textInputTraits key="textInputTraits" autocorrectionType="no"/>
                                             </textField>
                                             <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Contact Email" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="c1x-00-Xb6">
                                                 <rect key="frame" x="0.0" y="113.00000000000001" width="294" height="36.666666666666671"/>
                                                 <fontDescription key="fontDescription" name="PlayfairDisplay-Regular" family="Playfair Display" pointSize="20"/>
-                                                <textInputTraits key="textInputTraits"/>
+                                                <textInputTraits key="textInputTraits" autocorrectionType="no"/>
                                             </textField>
                                             <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Contact Phone Number" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="r3h-dK-6YU">
                                                 <rect key="frame" x="0.0" y="169.66666666666669" width="294" height="36.333333333333343"/>
                                                 <fontDescription key="fontDescription" name="PlayfairDisplay-Regular" family="Playfair Display" pointSize="20"/>
-                                                <textInputTraits key="textInputTraits"/>
+                                                <textInputTraits key="textInputTraits" autocorrectionType="no" keyboardType="numberPad"/>
                                             </textField>
                                         </subviews>
                                     </stackView>
@@ -829,7 +831,8 @@
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="x77-cC-35c"/>
+        <segue reference="Ym5-2u-CgV"/>
+        <segue reference="GTD-EJ-Rah"/>
     </inferredMetricsTieBreakers>
     <resources>
         <image name="arrowshape.turn.up.backward.2" catalog="system" width="128" height="86"/>

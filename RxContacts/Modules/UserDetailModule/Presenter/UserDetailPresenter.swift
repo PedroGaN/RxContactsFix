@@ -7,6 +7,7 @@
 
 import Foundation
 import UIKit
+import Alamofire
 
 class UserDetailPresenter: UserDetailPresenterProtocol {
     
@@ -31,13 +32,25 @@ class UserDetailPresenter: UserDetailPresenterProtocol {
         }
     }
     
-    func deleteUser(password: String) {
-
+    func logoutUser(completion: @escaping (String) -> Void) {
+        
+        let headers : HTTPHeaders = [ "Authorization" : "Bearer " + Constants.currentUser.apiToken]
+        let parameters = [ "id" : Constants.currentUser.id ]
+        
+        NetworkManager.shared.logout(parameters: parameters, headers: headers, completion: { status in
+            completion(status)
+        })
+        
+    }
+    
+    func goTo(identifier: String, from: UIViewController) {
+        from.performSegue(withIdentifier: identifier, sender: Any?.self)
     }
     
 }
 
 protocol UserDetailPresenterProtocol{
     func setDetails()
-    func deleteUser(password: String)
+    func logoutUser(completion: @escaping (String) -> Void)
+    func goTo(identifier: String, from: UIViewController)
 }

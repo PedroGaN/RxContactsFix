@@ -15,6 +15,8 @@ class ContactsViewController: UITableViewController, UISearchBarDelegate {
     
     var currentIndex : Int?
     
+    var currentContacts : Contacts?
+    
     @IBOutlet weak var SearchBar: UISearchBar!
     @IBOutlet weak var SegmentController: UISegmentedControl!
     
@@ -32,6 +34,7 @@ class ContactsViewController: UITableViewController, UISearchBarDelegate {
         
         self.SearchBar.delegate = self
         
+        self.currentContacts = Constants.currentUser.contactsInfo
         
         //-------------FLOATING BUTTON------------
         view.addSubview(floatingButton)
@@ -60,10 +63,18 @@ class ContactsViewController: UITableViewController, UISearchBarDelegate {
         //-------------FLOATING BUTTON------------
         
         
+        //-----------DISMISS KEYBOARD------------
+        //We create a UITapGestureRecognizer calling the action  UIView.endEditing to dismiss the keyboard
+        let tap = UITapGestureRecognizer(target: self.view, action: #selector(UIView.endEditing))
+        tap.cancelsTouchesInView = false
+        view.addGestureRecognizer(tap)
+        //-----------DISMISS KEYBOARD------------
+        
 
     }
     
     override func viewDidAppear(_ animated: Bool) {
+        self.currentContacts = Constants.currentUser.contactsInfo
         self.ContactsTableView.reloadData()
     }
     
@@ -72,16 +83,16 @@ class ContactsViewController: UITableViewController, UISearchBarDelegate {
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return Constants.currentUser.contactsInfo.count
+        return self.currentContacts?.count ?? 0
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "contactCell", for: indexPath) as! ContactTableViewCell
 
-        cell.contactName.text = Constants.currentUser.contactsInfo[indexPath.row].name
-        cell.contactLastName.text = Constants.currentUser.contactsInfo[indexPath.row].lastName
-        cell.contactEmail.text = Constants.currentUser.contactsInfo[indexPath.row].email
-        cell.contactPhone.text = String((Constants.currentUser.contactsInfo[indexPath.row].phoneNumber))
+        cell.contactName.text = self.currentContacts![indexPath.row].name
+        cell.contactLastName.text = self.currentContacts![indexPath.row].lastName
+        cell.contactEmail.text = self.currentContacts![indexPath.row].email
+        cell.contactPhone.text = String(self.currentContacts![indexPath.row].phoneNumber)
 
         return cell
     }
@@ -92,16 +103,28 @@ class ContactsViewController: UITableViewController, UISearchBarDelegate {
     }
     
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
-        if self.SegmentController.selectedSegmentIndex == 1 {
-            print("EMAIL")
-            //TO DO SEARCH BY EMAIL
-        }else if self.SegmentController.selectedSegmentIndex == 2 {
-            print("PHONE")
-            //TO DO SEARCH BY PHONE
-        }else {
-            print("NAME")
-            //TO DO SEARCH BY NAME
+        if !(self.SearchBar.text?.isEmpty ?? true) {
+            if self.SegmentController.selectedSegmentIndex == 1 {
+                print("EMAIL")
+                self.currentContacts = self.contactsPresenterProtocol?.searchByEmail(search: self.SearchBar.text!)
+                self.tableView.reloadData()
+            }else if self.SegmentController.selectedSegmentIndex == 2 {
+                print("PHONE")
+                self.currentContacts = self.contactsPresenterProtocol?.searchByPhone(search: self.SearchBar.text!)
+                self.tableView.reloadData()
+            }else {
+                print("NAME")
+                self.currentContacts = self.contactsPresenterProtocol?.searchByName(search: self.SearchBar.text!)
+                self.tableView.reloadData()
+            }
+            self.view.endEditing(true)
+        } else {
+            self.currentContacts = Constants.currentUser.contactsInfo
+            self.view.endEditing(true)
+            self.tableView.reloadData()
         }
+        
+ 
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
